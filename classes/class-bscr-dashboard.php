@@ -3,7 +3,7 @@
  * This file will create admin menu page.
  */
 
-class BSCR_ADMIN_MENU_DASHBOARD {
+class BSCR_TTM_ADMIN_MENU_DASHBOARD {
 
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'bscr_create_dashboard' ] );
@@ -28,4 +28,4 @@ class BSCR_ADMIN_MENU_DASHBOARD {
     }
 
 }
-new BSCR_ADMIN_MENU_DASHBOARD();
+new BSCR_TTM_ADMIN_MENU_DASHBOARD();
