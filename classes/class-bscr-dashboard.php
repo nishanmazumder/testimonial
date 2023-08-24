@@ -24,8 +24,10 @@ class BSCR_TTM_ADMIN_MENU_DASHBOARD {
     }
 
     public function menu_page_template() {
-        echo '<div class="bscr_ttm_wrapper"><div id="bscr_ttm_app">TEST</div></div>';
+        echo '<div class="bscr_ttm_wrapper"><div id="bscr_ttm_app"></div></div>';
     }
+
+
 
 }
 new BSCR_TTM_ADMIN_MENU_DASHBOARD();

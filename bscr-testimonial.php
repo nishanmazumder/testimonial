@@ -35,3 +35,16 @@ if (file_exists(BSCR_PATH . "post-types/taxonomy.php")) {
 if (file_exists(BSCR_PATH . "classes/class-bscr-dashboard.php")) {
 	require_once BSCR_PATH . "classes/class-bscr-dashboard.php";
 }
+
+/**
+ * Loading Necessary Scripts
+ */
+add_action('admin_enqueue_scripts', 'bscr_ttm_scripts');
+function bscr_ttm_scripts()
+{
+	wp_enqueue_script('bscr-ttm-main', BSCR_URL . 'dist/index.js', ['jquery', 'wp-element'], wp_rand(), true);
+	wp_localize_script('bscr-ttm-main', 'bsLocalizer', [
+		'apiUrl' => home_url('/wp-json'),
+		'nonce' => wp_create_nonce('wp_rest'),
+	]);
+}
