@@ -56,7 +56,7 @@ class BSTM_INIT
 	public function bstm_render_post_meta_box($post)
 	{
 		// $custom_value = get_post_meta($post->ID, 'custom_field_name', true);
-		echo '<div id="bstm_post_type" style="background: red; height: 200px; width: 300px;">Test</div>';
+		echo '<div id="bstm_post_type" style="background: green; height: 200px; width: 100%;">Test</div>';
 	}
 
 	// check testimonial
