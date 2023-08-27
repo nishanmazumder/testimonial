@@ -31,6 +31,11 @@ if (file_exists(BSCR_PATH . "post-types/taxonomy.php")) {
 	require_once BSCR_PATH . "post-types/taxonomy.php";
 }
 
+// post type
+if (file_exists(BSCR_PATH . "classes/class-bstm-init.php")) {
+	require_once BSCR_PATH . "classes/class-bstm-init.php";
+}
+
 // dashboard
 if (file_exists(BSCR_PATH . "classes/class-bscr-dashboard.php")) {
 	require_once BSCR_PATH . "classes/class-bscr-dashboard.php";

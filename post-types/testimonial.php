@@ -5,7 +5,7 @@
  */
 function testimonial_init() {
 	register_post_type(
-		'testimonial',
+		'bstm_testimonial',
 		[
 			'labels'                => [
 				'name'                  => __( 'Testimonials', 'bscr-testimonial' ),
@@ -65,7 +65,7 @@ function testimonial_updated_messages( $messages ) {
 
 	$permalink = get_permalink( $post );
 
-	$messages['testimonial'] = [
+	$messages['bstm_testimonial'] = [
 		0  => '', // Unused. Messages start at index 1.
 		/* translators: %s: post permalink */
 		1  => sprintf( __( 'Testimonial updated. <a target="_blank" href="%s">View testimonial</a>', 'bscr-testimonial' ), esc_url( $permalink ) ),
@@ -101,7 +101,7 @@ add_filter( 'post_updated_messages', 'testimonial_updated_messages' );
 function testimonial_bulk_updated_messages( $bulk_messages, $bulk_counts ) {
 	global $post;
 
-	$bulk_messages['testimonial'] = [
+	$bulk_messages['bstm_testimonial'] = [
 		/* translators: %s: Number of testimonials. */
 		'updated'   => _n( '%s testimonial updated.', '%s testimonials updated.', $bulk_counts['updated'], 'bscr-testimonial' ),
 		'locked'    => ( 1 === $bulk_counts['locked'] ) ? __( '1 testimonial not updated, somebody is editing it.', 'bscr-testimonial' ) :

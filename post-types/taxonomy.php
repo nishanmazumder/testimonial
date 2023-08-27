@@ -5,7 +5,7 @@
  * for use with 'testimonial'.
  */
 function category_init() {
-	register_taxonomy( 'category', [ 'testimonial' ], [
+	register_taxonomy( 'category', [ 'bstm_testimonial' ], [
 		'hierarchical'          => false,
 		'public'                => true,
 		'show_in_nav_menus'     => true,
