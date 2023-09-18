@@ -123,6 +123,14 @@ class BSTM_INIT
 				return current_user_can('edit_others_posts');
 			}
 		));
+
+		register_rest_route('bscr-ttm-settings/v2', '/save-ttm-data', array(
+            'methods'  => WP_REST_Server::CREATABLE,
+            'callback' => array($this, 'save_ttm_item_data_callback'),
+            'permission_callback' => function () {
+                return current_user_can('edit_others_posts');
+            }
+        ));
 	}
 
 	public function get_ttm_data(WP_REST_Request $request)
@@ -140,6 +148,34 @@ class BSTM_INIT
 		}
 		return "No Testimonial found";
 	}
+
+	public function save_ttm_item_data_callback(WP_REST_Request $request)
+    {
+
+		echo $request;
+
+        // if (isset($request['id'])) {
+        //     $popup_id = sanitize_key($request['id']);
+
+        //     if (isset($request['settings'])) {
+        //         $settings = $request['settings'];
+
+        //         update_post_meta($popup_id, BSTM_INIT::$popup_settings_key, wp_json_encode($settings));
+        //         update_post_meta($popup_id, '_df_popup_item_trigger_type', $settings['df_popup_trigger_type']);
+        //         $popup_status = isset($settings['df_popup_enable']) && $settings['df_popup_enable'] === true ? 1 : 0;
+        //         update_post_meta($popup_id, '_df_popup_item_status', $popup_status);
+
+        //         $postData = ['ID' => $popup_id, 'post_status' => 'publish'];
+        //         wp_update_post($postData);
+
+        //         return 'Successfully Saved';
+        //     } else {
+        //         return 'Missing settings data';
+        //     }
+        // } else {
+        //     return 'Missing ID parameter';
+        // }
+    }
 }
 
 new BSTM_INIT;

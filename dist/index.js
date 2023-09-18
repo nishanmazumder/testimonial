@@ -43,14 +43,53 @@ class Post extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.state = {
-      exampleSelect: ''
+      exampleSelect: '',
+      popupId: 0
     };
   }
+  componentDidMount() {
+    const popup_id = document.querySelector("#post_ID").value;
+    this.setState({
+      popupId: popup_id
+    });
+    console.log(popup_id);
+  }
+  handleSave = dataValue => {
+    // const _this = this;
+    const post_id = this.state.popupId;
+    // const post_id = 1
+    // _this.setState({ saving: true });
+    apiFetch({
+      path: '/bscr-ttm-settings/v2/save-ttm-data',
+      method: 'POST',
+      data: {
+        id: post_id,
+        settings: dataValue
+      }
+    });
+
+    // .then((res) => {
+    // 	_this.setState({ saving: false, saveComplete: true });
+    // 	if (document.getElementById("publish").value === 'Publish') {
+    // 		setTimeout(() => {
+    // 			document.getElementById("publish").click();
+    // 		}, 1000);
+
+    // 	}
+    // }).then(() => {
+    // 	setTimeout(() => {
+    // 		_this.setState({ saveComplete: false });
+    // 	}, 1500);
+    // });
+  };
+
   render() {
     const {
       exampleSelect
     } = this.state;
-    console.log(exampleSelect);
+
+    // console.log(exampleSelect);
+
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
       help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Use PanelRow to place controls inline.', 'wholesome-plugin'),
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Example Text 2', 'wholesome-plugin'),
@@ -58,7 +97,9 @@ class Post extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         exampleSelect
       }),
       value: exampleSelect
-    }));
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      onClick: () => this.handleSave(exampleSelect)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save Changes', '')));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Post);
