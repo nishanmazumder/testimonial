@@ -117,25 +117,67 @@ class BSTM_INIT
 	public function bstm_route_user()
 	{
 		register_rest_route('bscr-ttm-settings/v2', '/get-ttm-data', array(
-			'methods'  => WP_REST_Server::CREATABLE,
+			'methods'  => WP_REST_Server::READABLE,
 			'callback' => array($this, 'get_ttm_data'),
+			'permission_callback' => function () {
+				return true;
+				//return current_user_can('edit_others_posts');
+			}
+		));
+
+		register_rest_route('bscr-ttm-settings/v2', '/save-ttm-data', array(
+			'methods'  => WP_REST_Server::CREATABLE,
+			'callback' => array($this, 'save_ttm_item_data_callback'),
 			'permission_callback' => function () {
 				return current_user_can('edit_others_posts');
 			}
 		));
 
-		register_rest_route('bscr-ttm-settings/v2', '/save-ttm-data', array(
-            'methods'  => WP_REST_Server::CREATABLE,
-            'callback' => array($this, 'save_ttm_item_data_callback'),
-            'permission_callback' => function () {
-                return current_user_can('edit_others_posts');
-            }
-        ));
+		register_rest_route('myplugin/v1', '/author/(?P<id>\d+)', array(
+			'methods' => 'GET',
+			'callback' => [$this, 'my_awesome_func'],
+			'args' => array(
+			  'id' => array(
+				 'validate_callback' => function($param, $request, $key) {
+					return is_numeric( $param );
+				 }
+			  ),
+			),
+		 ));
+	}
+
+	public function my_awesome_func(WP_REST_Request $request)
+	{
+		// You can access parameters via direct array access on the object:
+		$param = $request['some_param'];
+
+		// Or via the helper method:
+		$param = $request->get_param('some_param');
+
+		// You can get the combined, merged set of parameters:
+		$parameters = $request->get_params();
+
+		// The individual sets of parameters are also available, if needed:
+		$parameters = $request->get_url_params();
+		$parameters = $request->get_query_params();
+		$parameters = $request->get_body_params();
+		$parameters = $request->get_json_params();
+		$parameters = $request->get_default_params();
+
+		// Uploads aren't merged in, but can be accessed separately:
+		$parameters = $request->get_file_params();
+
+		echo "test";
 	}
 
 	public function get_ttm_data(WP_REST_Request $request)
 	{
+
+
 		$ttm_id = sanitize_key($request['id']);
+
+
+		// return rest_ensure_response($ttm_id);
 
 		if ($ttm_id) {
 			$ttm_settings = get_post_meta($ttm_id, '_df_popup_item_settings', true);
@@ -150,32 +192,32 @@ class BSTM_INIT
 	}
 
 	public function save_ttm_item_data_callback(WP_REST_Request $request)
-    {
+	{
 
 		echo $request;
 
-        // if (isset($request['id'])) {
-        //     $popup_id = sanitize_key($request['id']);
+		// if (isset($request['id'])) {
+		//     $popup_id = sanitize_key($request['id']);
 
-        //     if (isset($request['settings'])) {
-        //         $settings = $request['settings'];
+		//     if (isset($request['settings'])) {
+		//         $settings = $request['settings'];
 
-        //         update_post_meta($popup_id, BSTM_INIT::$popup_settings_key, wp_json_encode($settings));
-        //         update_post_meta($popup_id, '_df_popup_item_trigger_type', $settings['df_popup_trigger_type']);
-        //         $popup_status = isset($settings['df_popup_enable']) && $settings['df_popup_enable'] === true ? 1 : 0;
-        //         update_post_meta($popup_id, '_df_popup_item_status', $popup_status);
+		//         update_post_meta($popup_id, BSTM_INIT::$popup_settings_key, wp_json_encode($settings));
+		//         update_post_meta($popup_id, '_df_popup_item_trigger_type', $settings['df_popup_trigger_type']);
+		//         $popup_status = isset($settings['df_popup_enable']) && $settings['df_popup_enable'] === true ? 1 : 0;
+		//         update_post_meta($popup_id, '_df_popup_item_status', $popup_status);
 
-        //         $postData = ['ID' => $popup_id, 'post_status' => 'publish'];
-        //         wp_update_post($postData);
+		//         $postData = ['ID' => $popup_id, 'post_status' => 'publish'];
+		//         wp_update_post($postData);
 
-        //         return 'Successfully Saved';
-        //     } else {
-        //         return 'Missing settings data';
-        //     }
-        // } else {
-        //     return 'Missing ID parameter';
-        // }
-    }
+		//         return 'Successfully Saved';
+		//     } else {
+		//         return 'Missing settings data';
+		//     }
+		// } else {
+		//     return 'Missing ID parameter';
+		// }
+	}
 }
 
 new BSTM_INIT;

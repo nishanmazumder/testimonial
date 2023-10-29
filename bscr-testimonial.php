@@ -41,6 +41,11 @@ if (file_exists(BSCR_PATH . "classes/class-bscr-dashboard.php")) {
 	require_once BSCR_PATH . "classes/class-bscr-dashboard.php";
 }
 
+// metabox
+if (file_exists(BSCR_PATH . "classes/class-metabox.php")) {
+	require_once BSCR_PATH . "classes/class-metabox.php";
+}
+
 /**
  * Loading Necessary Scripts
  */
