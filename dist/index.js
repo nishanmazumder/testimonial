@@ -102,7 +102,52 @@ class Post extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Save Changes', '')));
   }
 }
-/* harmony default export */ __webpack_exports__["default"] = (Post);
+
+// export default function Posts() {
+//     const [posts, setPosts] = useState([]);
+//     useEffect(() => {
+//         async function loadPosts() {
+//             const response = await fetch('/wp-json/wp/v2/posts');
+//             if(!response.ok) {
+//                 // oups! something went wrong
+//                 return;
+//             }
+
+//             const posts = await response.json();
+//             setPosts(posts);
+//         }
+
+//         loadPosts();
+//    }, [])
+
+//    console.log("test");
+
+//   return (
+
+// 	<div className='template'>Test</div>
+
+//     // <Grid container spacing={2}>
+//     //   {posts.map((post, index) => (
+//     //   <Grid item xs={4} key={index}>
+//     //     <Card>
+//     //        <CardContent>
+//     //             <Typography
+//     //                 color="textSecondary"
+//     //                 gutterBottom
+//     //                 dangerouslySetInnerHTML={{__html: post.title.rendered}} />
+//     //             <Typography
+//     //                 variant="body2"
+//     //                 component="p"
+//     //                 dangerouslySetInnerHTML={{__html: post.content.rendered}} />
+//     //         </CardContent>
+//     //     </Card>
+//     //   </Grid>
+//     //  ))}
+//     // </Grid>
+//  );
+// }
+
+// export default Post
 
 /***/ }),
 
@@ -228,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof post !== 'undefined' && post !== null) {
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_component_settings_post__WEBPACK_IMPORTED_MODULE_2__["default"], null), post);
   }
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_component_settings_post__WEBPACK_IMPORTED_MODULE_2__["default"], null), post);
 });
 }();
 /******/ })()

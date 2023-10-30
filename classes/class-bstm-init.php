@@ -12,7 +12,7 @@ class BSTM_INIT
 		// 	require_once ABSPATH . '/wp-admin/includes/screen.php';
 		// }
 
-		add_action('admin_enqueue_scripts', array($this, 'load_styles_scripts'));
+		// add_action('admin_enqueue_scripts', array($this, 'load_styles_scripts'));
 
 		//disable options
 		add_filter('use_block_editor_for_post_type', array($this, 'bstm_disable_block_editor'), 10, 2);
@@ -20,11 +20,11 @@ class BSTM_INIT
 
 		// container
 		// add_action('admin_footer', [$this, 'bstm_post_type_area']);
-		add_action('add_meta_boxes', [$this, 'bstm_post_meta_box']);
+		// add_action('add_meta_boxes', [$this, 'bstm_post_meta_box']);
 
 		// add_action('add_meta_boxes', 'add_custom_meta_box', $this->post_type);
 
-		add_action('rest_api_init', array($this, 'bstm_route_user'));
+		// add_action('rest_api_init', array($this, 'bstm_route_user'));
 	}
 
 	/**
@@ -61,7 +61,7 @@ class BSTM_INIT
 
 	public function load_styles_scripts()
 	{
-		if (!$this->_is_bstm_testimonial()) return;
+		// if (!$this->_is_bstm_testimonial()) return;
 		$dependency_path = __DIR__ . "/../dist/index.asset.php";
 
 		$script_asset = require($dependency_path);
