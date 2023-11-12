@@ -11,8 +11,8 @@
  * Rating = get_post_meta( get_the_ID(), 'bstm_rating', true )
  * Feedback = get_post_meta( get_the_ID(), 'bstm_feedback', true )
  */
-class bstm_
-{
+class bstm_ {
+
 	private $config = '{
 		"title": "Client Information",
 		"description": "Please provide all information",
@@ -59,22 +59,20 @@ class bstm_
 		]
 	  }';
 
-	public function __construct()
-	{
-		$this->config = json_decode($this->config, true);
-		add_action('add_meta_boxes', [$this, 'add_meta_boxes']);
-		add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
-		add_action('admin_head', [$this, 'admin_head']);
-		add_action('save_post', [$this, 'save_post']);
+	public function __construct() {
+		$this->config = json_decode( $this->config, true );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_head', array( $this, 'admin_head' ) );
+		add_action( 'save_post', array( $this, 'save_post' ) );
 	}
 
-	public function add_meta_boxes()
-	{
-		foreach ($this->config['post-type'] as $screen) {
+	public function add_meta_boxes() {
+		foreach ( $this->config['post-type'] as $screen ) {
 			add_meta_box(
-				sanitize_title($this->config['title']),
+				sanitize_title( $this->config['title'] ),
 				$this->config['title'],
-				[$this, 'add_meta_box_callback'],
+				array( $this, 'add_meta_box_callback' ),
 				$screen,
 				$this->config['context'],
 				$this->config['priority']
@@ -82,19 +80,17 @@ class bstm_
 		}
 	}
 
-	public function admin_enqueue_scripts()
-	{
+	public function admin_enqueue_scripts() {
 		global $typenow;
-		if (in_array($typenow, $this->config['post-type'])) {
+		if ( in_array( $typenow, $this->config['post-type'] ) ) {
 			wp_enqueue_media();
 		}
 	}
 
-	public function admin_head()
-	{
+	public function admin_head() {
 		global $typenow;
-		if (in_array($typenow, $this->config['post-type'])) {
-?><script>
+		if ( in_array( $typenow, $this->config['post-type'] ) ) {
+			?><script>
 				jQuery.noConflict();
 				(function($) {
 					$(function() {
@@ -115,170 +111,164 @@ class bstm_
 						});
 					});
 				})(jQuery);
-			</script><?php
-						?><?php
+			</script>
+			<?php
+		}
+	}
+
+	public function save_post( $post_id ) {
+		foreach ( $this->config['fields'] as $field ) {
+			switch ( $field['type'] ) {
+				default:
+					if ( isset( $_POST[ $field['id'] ] ) ) {
+						$sanitized = sanitize_text_field( $_POST[ $field['id'] ] );
+						update_post_meta( $post_id, $field['id'], $sanitized );
+					}
 			}
 		}
+	}
 
-		public function save_post($post_id)
-		{
-			foreach ($this->config['fields'] as $field) {
-				switch ($field['type']) {
-					default:
-						if (isset($_POST[$field['id']])) {
-							$sanitized = sanitize_text_field($_POST[$field['id']]);
-							update_post_meta($post_id, $field['id'], $sanitized);
-						}
+	public function add_meta_box_callback() {
+		echo '<div class="rwp-description">' . $this->config['description'] . '</div>';
+		$this->fields_table();
+	}
+
+	private function fields_table() {
+		?>
+				<table class="form-table" role="presentation">
+				<tbody>
+				<?php
+				foreach ( $this->config['fields'] as $field ) {
+					?>
+						<tr>
+							<th scope="row"><?php $this->label( $field ); ?></th>
+							<td><?php $this->field( $field ); ?></td>
+						</tr>
+					<?php
 				}
-			}
+				?>
+								</tbody>
+			</table>
+			<?php
+	}
+
+	private function label( $field ) {
+		switch ( $field['type'] ) {
+			case 'media':
+				printf(
+					'<label class="" for="%s_button">%s</label>',
+					$field['id'],
+					$field['label']
+				);
+				break;
+			default:
+				printf(
+					'<label class="" for="%s">%s</label>',
+					$field['id'],
+					$field['label']
+				);
 		}
+	}
 
-		public function add_meta_box_callback()
-		{
-			echo '<div class="rwp-description">' . $this->config['description'] . '</div>';
-			$this->fields_table();
+	private function field( $field ) {
+		switch ( $field['type'] ) {
+			case 'media':
+				$this->input( $field );
+				$this->media_button( $field );
+				break;
+			case 'select':
+				$this->select( $field );
+				break;
+			case 'textarea':
+				$this->textarea( $field );
+				break;
+			default:
+				$this->input( $field );
 		}
+	}
 
-		private function fields_table()
-		{
-				?><table class="form-table" role="presentation">
-				<tbody><?php
-						foreach ($this->config['fields'] as $field) {
-						?><tr>
-							<th scope="row"><?php $this->label($field); ?></th>
-							<td><?php $this->field($field); ?></td>
-						</tr><?php
-							}
-								?></tbody>
-			</table><?php
-				}
+	private function input( $field ) {
+		if ( $field['type'] === 'media' ) {
+			$field['type'] = 'text';
+		}
+		printf(
+			'<input class="regular-text %s" id="%s" name="%s" %s type="%s" value="%s">',
+			isset( $field['class'] ) ? $field['class'] : '',
+			$field['id'],
+			$field['id'],
+			isset( $field['pattern'] ) ? "pattern='{$field['pattern']}'" : '',
+			$field['type'],
+			$this->value( $field )
+		);
+	}
 
-				private function label($field)
-				{
-					switch ($field['type']) {
-						case 'media':
-							printf(
-								'<label class="" for="%s_button">%s</label>',
-								$field['id'],
-								$field['label']
-							);
-							break;
-						default:
-							printf(
-								'<label class="" for="%s">%s</label>',
-								$field['id'],
-								$field['label']
-							);
-					}
-				}
+	private function media_button( $field ) {
+		printf(
+			' <button class="button rwp-media-toggle" data-modal-button="%s" data-modal-title="%s" data-return="%s" id="%s_button" name="%s_button" type="button">%s</button>',
+			isset( $field['modal-button'] ) ? $field['modal-button'] : __( 'Select this file', 'bscr-testimonial' ),
+			isset( $field['modal-title'] ) ? $field['modal-title'] : __( 'Choose a file', 'bscr-testimonial' ),
+			$field['return'],
+			$field['id'],
+			$field['id'],
+			isset( $field['button-text'] ) ? $field['button-text'] : __( 'Upload', 'bscr-testimonial' )
+		);
+	}
 
-				private function field($field)
-				{
-					switch ($field['type']) {
-						case 'media':
-							$this->input($field);
-							$this->media_button($field);
-							break;
-						case 'select':
-							$this->select($field);
-							break;
-						case 'textarea':
-							$this->textarea($field);
-							break;
-						default:
-							$this->input($field);
-					}
-				}
+	private function select( $field ) {
+		printf(
+			'<select id="%s" name="%s">%s</select>',
+			$field['id'],
+			$field['id'],
+			$this->select_options( $field )
+		);
+	}
 
-				private function input($field)
-				{
-					if ($field['type'] === 'media') {
-						$field['type'] = 'text';
-					}
-					printf(
-						'<input class="regular-text %s" id="%s" name="%s" %s type="%s" value="%s">',
-						isset($field['class']) ? $field['class'] : '',
-						$field['id'],
-						$field['id'],
-						isset($field['pattern']) ? "pattern='{$field['pattern']}'" : '',
-						$field['type'],
-						$this->value($field)
-					);
-				}
+	private function select_selected( $field, $current ) {
+		$value = $this->value( $field );
+		if ( $value === $current ) {
+			return 'selected';
+		}
+		return '';
+	}
 
-				private function media_button($field)
-				{
-					printf(
-						' <button class="button rwp-media-toggle" data-modal-button="%s" data-modal-title="%s" data-return="%s" id="%s_button" name="%s_button" type="button">%s</button>',
-						isset($field['modal-button']) ? $field['modal-button'] : __('Select this file', 'bscr-testimonial'),
-						isset($field['modal-title']) ? $field['modal-title'] : __('Choose a file', 'bscr-testimonial'),
-						$field['return'],
-						$field['id'],
-						$field['id'],
-						isset($field['button-text']) ? $field['button-text'] : __('Upload', 'bscr-testimonial')
-					);
-				}
+	private function select_options( $field ) {
+		$output  = array();
+		$options = explode( "\r\n", $field['options'] );
+		$i       = 0;
+		foreach ( $options as $option ) {
+			$pair     = explode( ':', $option );
+			$pair     = array_map( 'trim', $pair );
+			$output[] = sprintf(
+				'<option %s value="%s"> %s</option>',
+				$this->select_selected( $field, $pair[0] ),
+				$pair[0],
+				$pair[1]
+			);
+			++$i;
+		}
+		return implode( '<br>', $output );
+	}
 
-				private function select($field)
-				{
-					printf(
-						'<select id="%s" name="%s">%s</select>',
-						$field['id'],
-						$field['id'],
-						$this->select_options($field)
-					);
-				}
+	private function textarea( $field ) {
+		printf(
+			'<textarea class="regular-text" id="%s" name="%s" rows="%d">%s</textarea>',
+			$field['id'],
+			$field['id'],
+			isset( $field['rows'] ) ? $field['rows'] : 5,
+			$this->value( $field )
+		);
+	}
 
-				private function select_selected($field, $current)
-				{
-					$value = $this->value($field);
-					if ($value === $current) {
-						return 'selected';
-					}
-					return '';
-				}
-
-				private function select_options($field)
-				{
-					$output = [];
-					$options = explode("\r\n", $field['options']);
-					$i = 0;
-					foreach ($options as $option) {
-						$pair = explode(':', $option);
-						$pair = array_map('trim', $pair);
-						$output[] = sprintf(
-							'<option %s value="%s"> %s</option>',
-							$this->select_selected($field, $pair[0]),
-							$pair[0],
-							$pair[1]
-						);
-						$i++;
-					}
-					return implode('<br>', $output);
-				}
-
-				private function textarea($field)
-				{
-					printf(
-						'<textarea class="regular-text" id="%s" name="%s" rows="%d">%s</textarea>',
-						$field['id'],
-						$field['id'],
-						isset($field['rows']) ? $field['rows'] : 5,
-						$this->value($field)
-					);
-				}
-
-				private function value($field)
-				{
-					global $post;
-					if (metadata_exists('post', $post->ID, $field['id'])) {
-						$value = get_post_meta($post->ID, $field['id'], true);
-					} else if (isset($field['default'])) {
-						$value = $field['default'];
-					} else {
-						return '';
-					}
-					return str_replace('\u0027', "'", $value);
-				}
-			}
-			new bstm_;
+	private function value( $field ) {
+		global $post;
+		if ( metadata_exists( 'post', $post->ID, $field['id'] ) ) {
+			$value = get_post_meta( $post->ID, $field['id'], true );
+		} elseif ( isset( $field['default'] ) ) {
+			$value = $field['default'];
+		} else {
+			return '';
+		}
+		return str_replace( '\u0027', "'", $value );
+	}
+}
+			new bstm_();
