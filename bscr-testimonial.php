@@ -47,12 +47,12 @@ if ( file_exists( BSTM_PATH . 'classes/class-metabox.php' ) ) {
 }
 
 
-if ( file_exists( BSTM_PATH . 'dist/index.js' ) ) {
+if ( file_exists( BSTM_PATH . 'build/index.js' ) ) {
 	/**
 	 * Loading Necessary Scripts
 	 */
 	function bstm_ttm_scripts() {
-		wp_enqueue_script( 'bscr-ttm-main', BSTM_URL . 'dist/index.js', array( 'jquery', 'wp-element' ), wp_rand(), true );
+		wp_enqueue_script( 'bscr-ttm-main', BSTM_URL . 'build/index.js', array( 'jquery', 'wp-element' ), wp_rand(), true );
 		wp_localize_script(
 			'bscr-ttm-main',
 			'bsLocalizer',

@@ -18,7 +18,7 @@ class BSTM_INIT {
 		add_action( 'admin_init', array( $this, 'bstm_disable_options' ) );
 
 		// container
-		// add_action('admin_footer', [$this, 'bstm_post_type_area']);
+		add_action('admin_footer', [$this, 'bstm_post_type_area']);
 		// add_action('add_meta_boxes', [$this, 'bstm_post_meta_box']);
 
 		// add_action('add_meta_boxes', 'add_custom_meta_box', $this->post_type);
@@ -31,19 +31,21 @@ class BSTM_INIT {
 	 *
 	 * @return void
 	 */
-	// public function bstm_post_type_area()
-	// {
-	// $screen = get_current_screen();
-	// if ($screen->id === 'bstm_testimonial') {
-	// echo '<div id="bstm_post_type" style="background: red; height: 200px; width: 300px;">Test</div>';
-	// }
+	public function bstm_post_type_area() {
+		$screen = get_current_screen();
+		if ( 'bstm_testimonial' === $screen->id ) {
+			echo '<div id="bstm_post_type" style="background: red; height: 200px; width: 300px; margin: 0px auto">Container</div>';
+		}
+	}
 
-	// return;
-	// }
-
+	/**
+	 * Add metabox
+	 *
+	 * @return void
+	 */
 	public function bstm_post_meta_box() {
-		$isTestimonial = $this->_is_bstm_testimonial();
-		if ( $isTestimonial ) {
+		$is_testimonial = $this->_is_bstm_testimonial();
+		if ( $is_testimonial ) {
 			add_meta_box(
 				'bstm_post_metabox_id',
 				'Client\'s Information',
@@ -59,12 +61,12 @@ class BSTM_INIT {
 
 	public function load_styles_scripts() {
 		// if (!$this->_is_bstm_testimonial()) return;
-		$dependency_path = __DIR__ . '/../dist/index.asset.php';
+		$dependency_path = __DIR__ . '/../build/index.asset.php';
 
 		$script_asset = require $dependency_path;
 		wp_enqueue_script(
 			'bstm-admin-editor',
-			plugins_url( 'dist/index.js', __FILE__ ),
+			plugins_url( 'build/index.js', __FILE__ ),
 			$script_asset['dependencies'],
 			$script_asset['version'],
 			true
@@ -81,10 +83,13 @@ class BSTM_INIT {
 		// );
 	}
 
-
-	public function bstm_render_post_meta_box( $post ) {
-		// $custom_value = get_post_meta($post->ID, 'custom_field_name', true);
-		echo '<div id="bstm_post_type" style="background: #fff; height: 200px; width: 100%;">Test</div>';
+	/**
+	 * Render container for metabox
+	 *
+	 * @return void
+	 */
+	public function bstm_render_post_meta_box() {
+		echo '<div id="bstm_post_type" style="background: #fff; height: 200px; width: 100%;">MetaBOX</div>';
 	}
 
 	// check testimonial
