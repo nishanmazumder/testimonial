@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Easy Testimonial
- * Plugin URI:  https://bdsoftcr.com/testimonial
+ * Plugin URI:  https://nishanmazumder.com
  * Description: This is a testimonial plugin.
  * Author:      Nishan M.
- * Author URI:  https://bdsoftcr.com
+ * Author URI:  https://nishanmazumder.com
  * Text Domain: bstm
  * Domain Path: /languages
  * Version:     0.1.0
